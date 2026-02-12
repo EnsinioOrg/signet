@@ -3,6 +3,7 @@ import requests
 
 from signet.util.json import respond_json
 from signet.commands.pdf import PDFWatermarker
+from signet.commands.pdf_metadata import PDFTracker
 from signet.stamper.pdf_stamper import PDFStamper
 
 app = typer.Typer(
@@ -57,8 +58,8 @@ def pdf_metadata(
         "producer": producer,
         "keywords": keywords,
     })
-    watermarker = PDFWatermarker(input_path, output_path, stamper=stamper)
-    watermarker.process_metadata_only()
+    tracker = PDFTracker(input_path, output_path, stamper=stamper)
+    tracker.process_metadata_only()
 
 
 @app.command()
