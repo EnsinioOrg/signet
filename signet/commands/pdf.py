@@ -44,6 +44,32 @@ class PDFWatermarker:
         # 7. respond with location of saved file
         respond_json({"status": "OK", "output_path": output_path, "metadata": metadata}, pretty=True)
 
+    def process_metadata_only(self):
+        # 1. validate userdata
+        if not self.stamper.userdata:
+            respond_json({"error": "User data is required for metadata."}, pretty=True)
+            return
+
+        # 2. check file exists
+        if self.file_exists(self.input_path) is False:
+            raise FileNotFoundError(f"Arquivo não encontrado: {self.input_path}")
+        
+        # 3. open file
+        try:
+            self.open_file(self.input_path)
+        except FitzCannotOpenFileException as e:
+            respond_json({"error": str(e)}, pretty=True)
+            return
+        
+        # 4. set metadata
+        metadata = self.set_pdf_metadata()
+
+        # 6. save file
+        output_path = self.save_file(self.output_path)
+
+        # 7. respond with location of saved file
+        respond_json({"status": "OK", "output_path": output_path, "metadata": metadata}, pretty=True)
+
 
     def file_exists(self, input_path: str) -> bool:
         return os.path.isfile(input_path)

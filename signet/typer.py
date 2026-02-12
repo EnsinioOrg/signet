@@ -35,6 +35,31 @@ def pdf(
     watermarker = PDFWatermarker(input_path, output_path, stamper=stamper)
     watermarker.process_watermark()
 
+@app.command()
+def pdf_metadata(
+        input_path: str,
+        output_path: str,
+        fullname: str = typer.Option(..., prompt=True),
+        email: str = typer.Option(..., prompt=True),
+        document: str = typer.Option(..., prompt=True),
+        datetime: str = typer.Option(..., prompt=True),
+        title: str = typer.Option(..., prompt=True),
+        producer: str = typer.Option(..., prompt=True),
+        keywords: str = typer.Option(..., prompt=True),
+    ):
+
+    stamper = PDFStamper(userdata={
+        "fullname": fullname,
+        "email": email,
+        "document": document,
+        "generated_at": datetime,
+        "title": title,
+        "producer": producer,
+        "keywords": keywords,
+    })
+    watermarker = PDFWatermarker(input_path, output_path, stamper=stamper)
+    watermarker.process_metadata_only()
+
 
 @app.command()
 def epub(input: str):
